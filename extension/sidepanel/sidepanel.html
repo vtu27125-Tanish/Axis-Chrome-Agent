@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Axis</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+
+<body>
+  <div id="app">
+    <!-- Status Notification Banner -->
+    <div id="status-notification-container" class="status-notification-container"></div>
+
+
+    <!-- Screen 1: HOME (unauthenticated) -->
+    <div id="screen-home" class="screen active">
+      <div class="home-content">
+        <div class="home-logo">
+          <svg class="compass-icon" viewBox="0 0 64 64" width="64" height="64">
+            <circle cx="32" cy="32" r="30" fill="none" stroke="#4fc3f7" stroke-width="2" />
+            <polygon points="32,8 38,30 32,26 26,30" fill="#4fc3f7" />
+            <polygon points="32,56 26,34 32,38 38,34" fill="#4fc3f7" opacity="0.5" />
+          </svg>
+        </div>
+        <h1 class="home-title">Axis</h1>
+        <p class="home-subtitle">Voice-Driven Browser Agent</p>
+        <p class="home-description">Activate hands-free browsing across any website.</p>
+        <button id="sign-in-btn" class="btn-google">
+          <svg class="google-logo" viewBox="0 0 24 24" width="20" height="20">
+            <path
+              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+              fill="#4285F4" />
+            <path
+              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+              fill="#34A853" />
+            <path
+              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+              fill="#FBBC05" />
+            <path
+              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+              fill="#EA4335" />
+          </svg>
+          Sign in with Google
+        </button>
+        <div id="auth-error" style="color: #ff6b6b; margin-top: 12px; font-size: 13px; text-align: center;"></div>
+      </div>
+    </div>
+
+    <!-- Screen 2: AUTHENTICATING -->
+    <div id="screen-auth" class="screen">
+      <div class="auth-content">
+        <div class="auth-logo">
+          <svg class="compass-icon" viewBox="0 0 64 64" width="64" height="64">
+            <circle cx="32" cy="32" r="30" fill="none" stroke="#4fc3f7" stroke-width="2" />
+            <polygon points="32,8 38,30 32,26 26,30" fill="#4fc3f7" />
+            <polygon points="32,56 26,34 32,38 38,34" fill="#4fc3f7" opacity="0.5" />
+          </svg>
+          <svg class="checkmark" viewBox="0 0 32 32" width="28" height="28">
+            <circle cx="16" cy="16" r="14" fill="#4fc3f7" />
+            <polyline points="10,16 14,20 22,12" fill="none" stroke="#0d1117" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </div>
+        <h2 class="auth-title">Successfully Authenticated!</h2>
+        <p class="auth-subtitle">Preparing your workspace...</p>
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 3: MAIN (authenticated) -->
+    <div id="screen-main" class="screen">
+
+      <!-- VIEW A: IDLE VIEW -->
+      <div id="view-idle" class="view-panel view-idle">
+        <div class="idle-top-bar">
+          <div id="user-avatar" class="user-avatar">
+            <span id="user-initial"></span>
+            <img id="user-photo" class="user-photo hidden" alt="">
+          </div>
+          <button id="settings-btn" class="btn-icon-sm" title="Settings">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#6b7280" stroke-width="2">
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- AXIS Title (centered) with animated orb -->
+        <div class="idle-hero">
+          <div class="idle-orb-wrapper">
+            <div class="idle-orb"></div>
+            <svg class="idle-orb-icon n-mark" viewBox="0 0 64 64" width="34" height="34">
+              <defs>
+                <linearGradient id="nMarkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#f8fafc" />
+                  <stop offset="50%" stop-color="#cbd5e1" />
+                  <stop offset="100%" stop-color="#64748b" />
+                </linearGradient>
+              </defs>
+              <rect x="20" y="16" width="7" height="32" fill="url(#nMarkGrad)" />
+              <rect x="37" y="16" width="7" height="32" fill="url(#nMarkGrad)" />
+              <polygon points="20,16 27,16 44,48 37,48" fill="url(#nMarkGrad)" />
+            </svg>
+          </div>
+          <div class="idle-hero-title">AXIS</div>
+        </div>
+
+        <!-- Bottom section pinned down -->
+        <div class="idle-bottom">
+          <!-- Greeting -->
+          <div class="idle-greeting-section">
+            <div id="idle-greeting" class="idle-greeting">Nice to see you,</div>
+            <div class="idle-greeting-sub">How can I help you today?</div>
+          </div>
+
+          <!-- Quick Command Chips -->
+          <div class="quick-chips-row" id="quick-chips-row">
+            <button class="quick-chip" data-cmd="Summarize this page for me">
+              <span class="quick-chip-icon">📋</span> Summarize page
+            </button>
+            <button class="quick-chip" data-cmd="Find and highlight all links on this page">
+              <span class="quick-chip-icon">🔍</span> Find links
+            </button>
+            <button class="quick-chip" data-cmd="Fill in all empty form fields on this page">
+              <span class="quick-chip-icon">📝</span> Fill form
+            </button>
+            <button class="quick-chip" data-cmd="Take a screenshot of the current page">
+              <span class="quick-chip-icon">📸</span> Screenshot
+            </button>
+            <button class="quick-chip" data-cmd="Read the coding problem on this page and give me the full solution code in the chat, with a brief explanation">
+              <span class="quick-chip-icon">💻</span> Solve coding problem
+            </button>
+          </div>
+
+          <!-- Input Row with History -->
+          <div class="idle-input-row" id="idle-input-row">
+            <!-- History Panel (hidden by default) -->
+            <div class="history-panel hidden" id="history-panel">
+              <div class="history-panel-header">
+                <span class="history-panel-title">Recent Commands</span>
+                <button class="history-clear-btn" id="history-clear-btn">Clear all</button>
+              </div>
+              <div class="history-list" id="history-list"></div>
+            </div>
+
+            <!-- Input Box -->
+            <div id="idle-input-box" class="idle-input-box">
+              <input id="idle-text-input" class="idle-text-input" type="text" placeholder="Type a task or go live..."
+                autocomplete="off" />
+              <button id="go-live-btn" class="btn-go-live-pill" disabled>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+                  <path d="M19 10v2a7 7 0 01-14 0v-2" />
+                </svg>
+                GO LIVE
+              </button>
+            </div>
+
+            <!-- History Button -->
+            <button class="history-btn" id="history-btn" title="Recent commands">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- VIEW B: LIVE VIEW -->
+      <div id="view-live" class="view-panel view-live">
+        <div class="live-fluid-bg"></div>
+        <div class="live-noise-overlay"></div>
+        <div class="live-top">
+          <span class="live-label">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+              <path d="M19 10v2a7 7 0 01-14 0v-2" />
+              <line x1="12" y1="19" x2="12" y2="23" />
+            </svg>
+            Axis Live
+          </span>
+        </div>
+        <div class="live-center">
+          <div id="chat-container" class="chat-container"></div>
+          <div id="live-scroll-controls" class="chat-scroll-controls live-scroll-controls hidden">
+            <button id="live-scroll-up-btn" type="button" class="chat-scroll-btn" title="Scroll to top" aria-label="Scroll to top">&uarr;</button>
+            <button id="live-scroll-down-btn" type="button" class="chat-scroll-btn" title="Scroll to bottom" aria-label="Scroll to bottom">&darr;</button>
+          </div>
+        </div>
+        <div id="drop-overlay">
+          <div id="drop-message">
+            <span>📎</span>
+            <p>Drop file to share with Axis</p>
+          </div>
+        </div>
+        <!-- Live tab restriction button (moved to bottom) -->
+        <div class="live-bottom">
+          <canvas id="live-visualizer" class="visualizer-canvas-sm" width="300" height="60"></canvas>
+          <div id="live-status-container" class="live-status-container"></div>
+          <button id="end-session-btn" class="btn-pill btn-end">End Session</button>
+          <button id="hold-btn" class="btn-pill btn-hold">⏸️</button>
+          <button id="add-tabs-btn" class="btn-pill btn-restrict" style="margin-left:8px">Restrict Tabs</button>
+          <div id="tab-dropdown" class="tab-dropdown hidden"></div>
+        </div>
+      </div>
+
+      <!-- VIEW F: CHAT SESSION -->
+      <div id="view-chat" class="view-panel view-chat">
+        <div class="chat-top-bar">
+          <button id="chat-back-btn" class="btn-back">&larr;</button>
+          <span id="chat-session-title" class="chat-session-title">Chat</span>
+          <button id="new-chat-btn" class="btn-back" style="margin-left:auto">New chat</button>
+          <div id="chat-tab-selector" class="chat-restrict-wrapper">
+            <button id="chat-add-tabs-btn" class="btn-restrict-sm">Restrict Tabs</button>
+            <div id="chat-tab-dropdown" class="tab-dropdown hidden"></div>
+          </div>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div id="chat-scroll-controls" class="chat-scroll-controls hidden">
+          <button id="chat-scroll-up-btn" type="button" class="chat-scroll-btn" title="Scroll to top" aria-label="Scroll to top">&uarr;</button>
+          <button id="chat-scroll-down-btn" type="button" class="chat-scroll-btn" title="Scroll to bottom" aria-label="Scroll to bottom">&darr;</button>
+        </div>
+        <div id="chat-drop-overlay" class="drop-overlay-inner">
+          <div class="drop-message-inner"><span>📎</span>
+            <p>Drop file to share</p>
+          </div>
+        </div>
+        <div class="chat-input-bar">
+          <input id="chat-text-input" class="idle-text-input" type="text" placeholder="Type a message..."
+            autocomplete="off" />
+          <button id="chat-send-btn" class="btn-go-live-pill">Send</button>
+        </div>
+      </div>
+
+      <!-- VIEW G: USAGE LIMIT REACHED -->
+      <div id="view-limit" class="view-panel view-limit">
+        <div class="limit-container">
+          <div class="limit-card">
+            <div class="limit-icon-circle">
+              <span class="limit-icon">🛡️</span>
+            </div>
+            <h2 class="limit-title">Usage Limit Reached</h2>
+            <p class="limit-desc">Thank you for using Axis! You've reached your trial limit. To continue using Axis,
+              please contact the admin (Settings -> Feedback).</p>
+
+            <div class="usage-stats-grid">
+              <div class="usage-item">
+                <span class="usage-label">Input Messages</span>
+                <div class="usage-bar-bg">
+                  <div id="input-usage-bar" class="usage-bar-fill" style="width: 100%"></div>
+                </div>
+                <span id="input-usage-text" class="usage-value">0 / 0</span>
+              </div>
+
+              <div class="usage-item">
+                <span class="usage-label">AI Image Generations</span>
+                <div class="usage-bar-bg">
+                  <div id="image-usage-bar" class="usage-bar-fill" style="width: 100%"></div>
+                </div>
+                <span id="image-usage-text" class="usage-value">0 / 0</span>
+              </div>
+            </div>
+
+            <button id="limit-back-btn" class="btn-go-live-pill" style="margin-top: 24px; width: 100%;">
+              Yes, I Understand
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session Resume Popup -->
+      <div id="session-resume-popup" class="session-resume-popup hidden">
+        <span>Getting there...</span>
+      </div>
+
+      <!-- VIEW C: SETTINGS PANEL -->
+      <div id="view-settings" class="view-panel view-settings">
+        <div class="settings-top">
+          <button id="settings-back-btn" class="btn-back">&larr; Back</button>
+        </div>
+        <div class="settings-scroll">
+          <!-- Profile -->
+          <div class="settings-profile">
+            <div id="settings-avatar" class="settings-avatar">
+              <span id="settings-initial"></span>
+              <img id="settings-photo" class="settings-photo hidden" alt="">
+            </div>
+            <div id="settings-display-name" class="settings-name"></div>
+            <div id="settings-email" class="settings-email"></div>
+          </div>
+          <div class="settings-sep"></div>
+
+          <!-- Recent Sessions -->
+          <div class="settings-section-label">RECENT SESSIONS</div>
+          <div id="recent-sessions" class="recent-sessions"></div>
+          <button id="new-session-btn" class="btn-pill btn-new-session">New Session</button>
+          <div class="settings-sep"></div>
+
+          <!-- Appearance -->
+          <div class="settings-section-label">APPEARANCE</div>
+          <div class="settings-row" id="theme-toggle-row">
+            <span>Dark / Light</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="theme-toggle">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="settings-sep"></div>
+
+          <!-- Personalize Axis -->
+          <div class="settings-section-label">PERSONALIZE AXIS</div>
+          <div class="settings-row">
+            <span>Voice</span>
+            <select id="voice-select" class="settings-select">
+              <option value="Aoede">Aoede — warm, friendly</option>
+              <option value="Charon">Charon — deep, authoritative</option>
+              <option value="Fenrir">Fenrir — energetic, clear</option>
+              <option value="Kore">Kore — soft, calm</option>
+              <option value="Puck">Puck — bright, expressive</option>
+            </select>
+          </div>
+          <div class="settings-row">
+            <span>Persona</span>
+            <select id="persona-select" class="settings-select">
+              <option value="Axis">Axis — professional Agent</option>
+              <option value="Sage">Sage — wise and methodical</option>
+              <option value="Scout">Scout — quick and efficient</option>
+              <option value="Companion">Companion — friendly and encouraging</option>
+              <option value="Expert">Expert — technical and precise</option>
+            </select>
+          </div>
+          <div class="settings-custom-row">
+            <label class="feedback-label">Custom Instructions</label>
+            <textarea id="custom-instructions" class="settings-textarea" rows="3" maxlength="500"
+              placeholder="Add any extra instructions for Axis...&#10;e.g. 'Always respond in French' or&#10;'I am a developer, use technical language'"></textarea>
+            <div class="custom-instructions-footer">
+              <span id="char-count" class="char-count">0/500</span>
+              <button id="save-instructions-btn" class="btn-pill btn-save-instructions">Save</button>
+            </div>
+          </div>
+          <div id="settings-save-confirm" class="settings-save-confirm hidden">✓ Saved</div>
+          <div class="settings-sep"></div>
+
+          <!-- Misc -->
+          <div class="settings-section-label">SETTINGS</div>
+          <div class="settings-row clickable" id="about-axis-btn"><span>About Axis</span><span
+              class="chevron">&rsaquo;</span></div>
+          <div class="settings-row clickable" id="send-feedback-btn"><span>Send Feedback</span><span
+              class="chevron">&rsaquo;</span></div>
+          <div class="settings-row clickable" id="usage-settings-btn">
+            <span>Usage</span>
+            <span class="chevron">&rsaquo;</span>
+          </div>
+          <div class="settings-sep"></div>
+
+          <!-- Sign Out -->
+          <button id="sign-out-btn" class="btn-pill btn-signout">Sign out</button>
+        </div>
+      </div>
+
+      <!-- Dim overlay for settings -->
+      <div id="settings-overlay" class="settings-overlay"></div>
+
+      <div id="view-about" class="view-panel view-slide-panel">
+        <div class="slide-panel-top">
+          <button id="about-back-btn" class="btn-back">&larr; Back</button>
+        </div>
+        <div class="slide-panel-scroll">
+          <div class="about-header">
+            <svg class="compass-icon" viewBox="0 0 64 64" width="56" height="56">
+              <circle cx="32" cy="32" r="30" fill="none" stroke="#4fc3f7" stroke-width="2" />
+              <polygon points="32,8 38,30 32,26 26,30" fill="#4fc3f7" />
+              <polygon points="32,56 26,34 32,38 38,34" fill="#4fc3f7" opacity="0.5" />
+            </svg>
+            <h1 class="about-title">Axis</h1>
+            <div class="about-version">Version 2.7.04</div>
+            <div class="about-tagline">Voice-Driven Browser Agent</div>
+          </div>
+          <p class="about-description">Axis empowers you to control any website hands-free using your voice. Powered
+            by the Google
+            Gemini Live API, Axis intelligently understands your screen and executes tasks on your behalf &mdash; so
+            you can focus on what matters.
+            From browsing the web to generating stunning AI images, Axis is built to make your digital life easier.
+          </p>
+
+          <div class="about-section-label">HOW TO USE</div>
+          <ol class="about-steps">
+            <li>Click <strong>Go Live</strong> to start a session</li>
+            <li>Speak your command naturally</li>
+            <li>Axis will analyze and act on the current page</li>
+            <li>Say &ldquo;stop&rdquo; or click <strong>End Session</strong> when done</li>
+          </ol>
+
+          <div class="about-section-label">POWERED BY</div>
+          <ul class="about-powered">
+            <li>Google Gemini Live API</li>
+            <li>Google Cloud Run</li>
+            <li>Chrome Extension MV3</li>
+          </ul>
+
+          <div class="about-built-for">Built for Gemini Live Agent Challenge 2026</div>
+        </div>
+        <div class="about-developer">Developer ~ N.Tanish</div>
+      </div>
+
+      <!-- VIEW I: USAGE DASHBOARD -->
+
+      <div id="usage-view" class="view-panel view-slide-panel">
+        <div class="slide-panel-top">
+          <button id="usage-back-btn" class="btn-back">&larr; Back</button>
+        </div>
+        <div class="slide-panel-scroll">
+          <h2 class="usage-title">Usage</h2>
+
+          <!-- Info Box -->
+          <div class="usage-info-box">
+            <div class="usage-info-text">
+              Axis is currently in early development. To keep it free and running smoothly for everyone, usage limits
+              are applied per user account.
+            </div>
+          </div>
+
+          <!-- Commands Section -->
+          <div class="usage-section">
+            <div class="usage-label">Voice & Chat Commands</div>
+            <div id="usage-commands-remaining" class="usage-stat-number">0 / 0</div>
+            <div class="usage-progress-bar-track">
+              <div id="usage-commands-fill" class="usage-progress-bar-fill safe"></div>
+            </div>
+            <div id="usage-commands-subtext" class="usage-subtext">0 commands used out of 0</div>
+          </div>
+
+          <!-- Image Gen Section -->
+          <div class="usage-section">
+            <div class="usage-label">Image Generations</div>
+            <div id="usage-images-remaining" class="usage-stat-number">0 / 0</div>
+            <div class="usage-progress-bar-track">
+              <div id="usage-images-fill" class="usage-progress-bar-fill safe"></div>
+            </div>
+            <div id="usage-images-subtext" class="usage-subtext">0 of 0 image generations used</div>
+          </div>
+
+          <!-- Info Box -->
+          <div class="usage-info-box">
+            <div class="usage-info-text">
+              If you’d like to continue using Axis, please reach out through the Feedback section — I’d love to hear
+              from you.
+            </div>
+          </div>
+
+          <!-- Request Button -->
+          <button id="usage-request-btn" class="btn-go-live-pill" style="margin-top: 8px; width: 100%;">Request
+            Extended Access</button>
+        </div>
+      </div>
+
+      <!-- VIEW E: FEEDBACK VIEW -->
+      <div id="view-feedback" class="view-panel view-slide-panel">
+        <div class="slide-panel-top">
+          <button id="feedback-back-btn" class="btn-back">&larr; Back</button>
+        </div>
+        <div class="slide-panel-scroll">
+          <h2 class="feedback-title">Send Feedback</h2>
+          <p class="feedback-subtitle">I'd love to hear from you — whether it's a bug, a feature idea, or a request
+            for more usage!</p>
+          <form id="feedback-form" class="feedback-form">
+            <label class="feedback-label">Type</label>
+            <select id="feedback-type" class="feedback-select" required>
+              <option value="General Feedback" selected>General Feedback</option>
+              <option value="Bug Report">Bug Report</option>
+              <option value="Feature Request">Feature Request</option>
+              <option value="Limit Increase">Request Limit Increase</option>
+              <option value="Other">Other</option>
+            </select>
+            <label class="feedback-label">Subject</label>
+            <input type="text" id="feedback-subject" class="feedback-input" placeholder="Brief summary" required>
+            <label class="feedback-label">Message</label>
+            <textarea id="feedback-message" class="feedback-textarea" placeholder="Describe your feedback in detail..."
+              required></textarea>
+            <label class="feedback-label">Your name (optional)</label>
+            <input type="text" id="feedback-name" class="feedback-input" placeholder="Anonymous">
+            <button type="submit" class="btn-pill btn-feedback-submit">Send Feedback</button>
+          </form>
+          <div id="feedback-success" class="feedback-success hidden"></div>
+        </div>
+      </div>
+
+      <!-- VIEW G: ONBOARDING VIEW -->
+      <div id="view-onboarding" class="view-panel view-onboarding">
+        <div class="onboarding-content">
+          <div class="onboarding-logo">
+            <svg class="compass-icon" viewBox="0 0 64 64" width="64" height="64">
+              <circle cx="32" cy="32" r="30" fill="none" stroke="#4fc3f7" stroke-width="2" />
+              <polygon points="32,8 38,30 32,26 26,30" fill="#4fc3f7" />
+              <polygon points="32,56 26,34 32,38 38,34" fill="#4fc3f7" opacity="0.5" />
+            </svg>
+          </div>
+          <h2 class="onboarding-title">Welcome to Axis</h2>
+          <p class="onboarding-intro">Before you begin, here are a few important things to know:</p>
+          <div class="onboarding-info">
+            <div class="info-item">
+              <span class="info-icon">🕵️</span>
+              <div>
+                <strong>Privacy First:</strong> Use the <em>Restrict Tab</em> feature to keep specific tabs private.
+                Axis can navigate to them but cannot see their content or act on them.
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="info-icon">🔒</span>
+              <div>
+                <strong>Chrome Pages:</strong> For security, Axis cannot execute tasks on internal chrome pages like
+                Settings or Downloads, though it can open them for you.
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="info-icon">🧠</span>
+              <div>
+                <strong>AI Limitations:</strong> Axis may occasionally misunderstand complex instructions.
+                For best results, provide clear and specific tasks.
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="info-icon">💪</span>
+              <div>
+                <strong>User Control:</strong> You remain in control at all times, Pause or stop Axis whenever you
+                want
+                during task execution.
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="info-icon">📧</span>
+              <div>
+                <strong>Feedback:</strong> Axis is in early development. Whether you have a suggestion, found a bug,
+                or need a limit increase, reach out through the <em>Settings → Feedback</em> section!
+              </div>
+            </div>
+          </div>
+          <button id="onboarding-close-btn" class="btn-go-live-pill">Got it, let's go!</button>
+        </div>
+      </div>
+
+      <!-- VIEW H: OFFLINE VIEW -->
+      <div id="view-offline" class="view-panel view-offline">
+        <div class="offline-content">
+          <div class="offline-icon">📡</div>
+          <h2 class="offline-title">402 - System Offline :\</h2>
+          <p class="offline-subtitle">Check your Network or try again later.</p>
+          <button id="retry-conn-btn" class="btn-go-live-pill">Retry Connection</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div id="image-modal">
+    <div class="modal-content">
+      <img id="modal-image" src="" alt="Full view">
+      <div class="modal-controls">
+        <button id="modal-download-btn" class="btn-modal btn-modal-download">Download</button>
+        <button id="modal-close-btn" class="btn-modal btn-modal-close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Persistent Error Modal -->
+  <div id="error-modal" class="error-modal hidden">
+    <div class="error-modal-content">
+      <div class="error-icon">⚠️</div>
+      <h2 id="error-title">Service Interrupted</h2>
+      <p id="error-message">The AI service is currently unavailable. Please start a new session to continue.</p>
+      <button id="error-reset-btn" class="btn-pill btn-error-reset">Start New Session</button>
+    </div>
+  </div>
+
+  <!-- Global Toast Container -->
+  <div class="axis-toast-container" id="axis-toast-container"></div>
+
+  <script src="../lib/mermaid.min.js"></script>
+  <script type="module" src="sidepanel.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Secrets
+.env
+
+# Logs
+logs/
+*.log
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Node (if any tooling gets added later)
+node_modules/
+
+# Fix scripts used during development (optional to keep, remove if you don't want them in history)
+fix_*.py
