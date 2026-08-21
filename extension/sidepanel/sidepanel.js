@@ -385,6 +385,7 @@ const newChatBtn = document.getElementById('new-chat-btn');
 const chatMessagesEl = document.getElementById('chat-messages');
 const chatTextInput = document.getElementById('chat-text-input');
 const chatSendBtn = document.getElementById('chat-send-btn');
+const ragUploadInput = document.getElementById('rag-upload-input');
 const chatTabPillsEl = document.getElementById('chat-tab-pills');
 const chatAddTabsBtn = document.getElementById('chat-add-tabs-btn');
 const chatTabDropdown = document.getElementById('chat-tab-dropdown');
@@ -2500,6 +2501,57 @@ async function sendChatMessage(text) {
         type: "chat_message",
         text
     }));
+}
+
+// RAG document upload
+if (ragUploadInput) {
+  ragUploadInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Reset input
+    e.target.value = '';
+
+    // Verify limit 
+    if (!await checkUsageLimit('input')) {
+        showToast("Inputs limit reached. Upgrade to continue.", "error");
+        return;
+    }
+
+    showToast("Uploading document for RAG indexing...", "info");
+    
+    // Fetch auth token / user ID (using default structure)
+    chrome.storage.local.get(['axis_user_id'], async (res) => {
+      const userId = res.axis_user_id || 'anonymous';
+      
+      const formData = new FormData();
+      formData.append('user_id', userId);
+      formData.append('file', file);
+      
+      try {
+        const response = await fetch(`${BACKEND_HTTP}/upload-document`, {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+          showToast(`Document indexed successfully! (${data.chunks_added} chunks)`, "success");
+          
+          // Optionally add a user message to show it in chat
+          chatMessagesEl.appendChild(createChatMsg("user", `Uploaded document: ${file.name}`));
+          chatMessagesEl.appendChild(createChatMsg("assistant", "I've memorized that document for you. You can ask me questions about it!"));
+          chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+        } else {
+          showToast(`Upload failed: ${data.error || 'Unknown error'}`, "error");
+        }
+      } catch (err) {
+        console.error("RAG upload error:", err);
+        showToast("Error uploading document.", "error");
+      }
+    });
+  });
 }
 
 // Chat send button

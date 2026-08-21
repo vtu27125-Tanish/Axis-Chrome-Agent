@@ -29,7 +29,7 @@ import io
 import csv
 from pypdf import PdfReader
 
-from fastapi import FastAPI, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, Query, Request, WebSocket, WebSocketDisconnect, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -1363,6 +1363,22 @@ class FeedbackRequest(BaseModel):
 
 
 _feedback_timestamps: dict[str, list[float]] = {}
+
+
+@app.post("/upload-document")
+async def upload_document(user_id: str = Form(...), file: UploadFile = File(...)):
+    if not user_id:
+        raise HTTPException(status_code=400, detail="Missing user_id")
+    try:
+        content = await file.read()
+        # Decode text (assume utf-8 for now)
+        text = content.decode("utf-8")
+        res = await rag_service.add_document(user_id, text, source=file.filename)
+        return res
+    except Exception as e:
+        logger.error(f"Document upload error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 
 @app.post("/feedback")
