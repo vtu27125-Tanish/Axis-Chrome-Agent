@@ -18,6 +18,8 @@ import asyncio
 import base64
 import copy
 import json
+
+from backend import rag_service
 import logging
 import re
 from contextlib import asynccontextmanager
@@ -1674,6 +1676,27 @@ CHAT_TOOL_DECLARATIONS = types.Tool(function_declarations=[
         description="Resume the live session from hold (re-activates microphone). Call this when the user says 'resume', 'start listening again', or similar.",
         parameters=types.Schema(type="OBJECT", properties={}),
     ),
+    types.FunctionDeclaration(
+        name="rag_ingest",
+        description="Extract text from the current page or a provided string and save it to the user's RAG knowledge base. Use this when the user says 'remember this page' or 'save this text'.",
+        parameters=types.Schema(
+            type="OBJECT",
+            properties={
+                "text": types.Schema(type="STRING", description="The text to index. If omitted, you must first use execute_dom_action to get page text and then call this."),
+            }
+        ),
+    ),
+    types.FunctionDeclaration(
+        name="rag_search",
+        description="Search the user's RAG knowledge base for information. Use this when the user asks a question about something they previously told you to remember.",
+        parameters=types.Schema(
+            type="OBJECT",
+            properties={
+                "query": types.Schema(type="STRING", description="The search query."),
+            },
+            required=["query"]
+        ),
+    ),
 ])
 
 
@@ -1775,6 +1798,22 @@ async def _execute_chat_tool(state: SessionState, tool_name: str, args: dict) ->
                 state.session_id, state.tab_id or "", tool_name="resume_session", args={}, timeout=5.0
             )
             return result, None
+
+        elif tool_name == "rag_ingest":
+            text = args.get("text", "")
+            if not text:
+                return {"success": False, "error": "No text provided to index."}, None
+            res = await rag_service.add_document(state.user_id, text)
+            return res, None
+
+        elif tool_name == "rag_search":
+            query = args.get("query", "")
+            if not query:
+                return {"success": False, "error": "No query provided."}, None
+            results = await rag_service.search_knowledge_base(state.user_id, query)
+            if not results:
+                return {"success": True, "message": "No relevant documents found in knowledge base."}, None
+            return {"success": True, "results": results}, None
 
         else:
             return {"success": False, "error": f"Unknown tool: {tool_name}"}, None
