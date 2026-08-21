@@ -3,8 +3,7 @@
 import { processCommand } from "../engine/agentEngine.js";
 // --- ENVIRONMENT CONFIGURATION ---
 const IS_PROD = false; // Set to true for production
-const PROD_DOMAIN = "axis-backend-461115625041.us-central1.run.app"; // We will paste the URL here later
-
+const PROD_DOMAIN = "axis-chrome-agent.onrender.com";
 const BACKEND_WS = IS_PROD ? `wss://${PROD_DOMAIN}/ws/` : 'ws://127.0.0.1:8080/ws/';
 const BACKEND_WS_CHAT = IS_PROD ? `wss://${PROD_DOMAIN}/ws-chat/` : 'ws://127.0.0.1:8080/ws-chat/';
 const BACKEND_HTTP = IS_PROD ? `https://${PROD_DOMAIN}` : 'http://127.0.0.1:8080';
