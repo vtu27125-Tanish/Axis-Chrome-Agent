@@ -1333,8 +1333,10 @@ async def get_user_counts_endpoint(user_id: str):
     image_count = counts.get("image_count", 0)
 
     # Resolve limits
-    effective_input_limit = counts.get("input_limit") if counts.get("input_limit") is not None else settings.limit_inputs
-    effective_image_limit = counts.get("image_limit") if counts.get("image_limit") is not None else settings.limit_images
+    db_in_lim = counts.get("input_limit")
+    effective_input_limit = db_in_lim if (db_in_lim is not None and db_in_lim > settings.limit_inputs) else settings.limit_inputs
+    db_im_lim = counts.get("image_limit")
+    effective_image_limit = db_im_lim if (db_im_lim is not None and db_im_lim > settings.limit_images) else settings.limit_images
 
     return {
         "input_count": input_count,
