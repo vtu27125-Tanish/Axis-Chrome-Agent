@@ -1447,8 +1447,8 @@ async def generate_image_endpoint(payload: ImageGenRequest, request: Request):
         if not hf_key:
             raise HTTPException(status_code=500, detail="HuggingFace API key is not configured.")
 
-        # Using a popular, free Stable Diffusion model on HuggingFace
-        model_url = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
+        # Using runwayml/stable-diffusion-v1-5 which doesn't require manual license agreements
+        model_url = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
         
         headers = {"Authorization": f"Bearer {hf_key}"}
         payload_data = {"inputs": payload.prompt}
