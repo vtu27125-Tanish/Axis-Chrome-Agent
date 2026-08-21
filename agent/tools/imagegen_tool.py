@@ -16,7 +16,7 @@ async def generate_image(prompt: str, session_id: str = "") -> dict:
         prompt: detailed description of the image.
         session_id: current session ID.
     """
-    url = "https://axis-backend-461115625041.us-central1.run.app/generate-image"
+    url = "https://axis-chrome-agent.onrender.com/generate-image"
     payload = {
         "prompt": prompt,
         "session_id": session_id
