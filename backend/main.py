@@ -1441,7 +1441,9 @@ async def generate_image_endpoint(payload: ImageGenRequest, request: Request):
                 logger.debug(f"Failed to send tool_start via WS: {e}")
 
     try:
-        import httpx
+        import urllib.request
+        import json
+        import asyncio
         
         hf_key = settings.huggingface_api_key
         if not hf_key:
@@ -1450,18 +1452,33 @@ async def generate_image_endpoint(payload: ImageGenRequest, request: Request):
         # Using runwayml/stable-diffusion-v1-5 which doesn't require manual license agreements
         model_url = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
         
-        headers = {"Authorization": f"Bearer {hf_key}"}
+        headers = {
+            "Authorization": f"Bearer {hf_key}",
+            "Content-Type": "application/json"
+        }
         payload_data = {"inputs": payload.prompt}
         
-        async with httpx.AsyncClient() as client:
-            res = await client.post(model_url, headers=headers, json=payload_data, timeout=60.0)
-            
-            if res.status_code != 200:
-                logger.error(f"HF Error: {res.text}")
-                raise HTTPException(status_code=500, detail=f"HuggingFace API error: {res.status_code}")
+        req = urllib.request.Request(
+            model_url,
+            data=json.dumps(payload_data).encode("utf-8"),
+            headers=headers
+        )
+        
+        def _fetch():
+            try:
+                with urllib.request.urlopen(req, timeout=60.0) as response:
+                    return response.read(), response.status
+            except urllib.error.HTTPError as e:
+                return e.read(), e.code
                 
-            image_bytes = res.content
-            image_b64 = base64.b64encode(image_bytes).decode("utf-8")
+        loop = asyncio.get_event_loop()
+        image_bytes, status_code = await loop.run_in_executor(None, _fetch)
+        
+        if status_code != 200:
+            logger.error(f"HF Error: {image_bytes}")
+            raise HTTPException(status_code=500, detail=f"HuggingFace API error: {status_code}")
+            
+        image_b64 = base64.b64encode(image_bytes).decode("utf-8")
             
         return {
             "image_b64": image_b64,
