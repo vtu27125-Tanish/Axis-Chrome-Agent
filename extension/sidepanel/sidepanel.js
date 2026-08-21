@@ -2,7 +2,7 @@
 // Manages UI state, Google Auth, audio playback, visualizer, ephemeral transcripts.
 import { processCommand } from "../engine/agentEngine.js";
 // --- ENVIRONMENT CONFIGURATION ---
-const IS_PROD = false; // Set to true for production
+const IS_PROD = true; // Set to true for production
 const PROD_DOMAIN = "axis-chrome-agent.onrender.com";
 const BACKEND_WS = IS_PROD ? `wss://${PROD_DOMAIN}/ws/` : 'ws://127.0.0.1:8080/ws/';
 const BACKEND_WS_CHAT = IS_PROD ? `wss://${PROD_DOMAIN}/ws-chat/` : 'ws://127.0.0.1:8080/ws-chat/';

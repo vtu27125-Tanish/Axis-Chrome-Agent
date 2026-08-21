@@ -1,12 +1,12 @@
 // services/aiService.js
 
-const IS_PROD = false;
+const IS_PROD = true;
 
 // Local Backend
 const LOCAL_BACKEND = "http://127.0.0.1:8080";
 
 // Future Production Backend
-const PROD_BACKEND = "https://your-domain.com";
+const PROD_BACKEND = "https://axis-chrome-agent.onrender.com";
 
 const BACKEND_HTTP = IS_PROD
     ? PROD_BACKEND
