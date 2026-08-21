@@ -46,6 +46,9 @@ class Settings(BaseSettings):
     mysql_password: str = ""
     mysql_database: str = "axis"
 
+    # HuggingFace (For Free Image Generation)
+    huggingface_api_key: str = ""
+
     # Usage Limits
     limit_inputs: int = 15
     limit_images: int = 5
