@@ -48,12 +48,6 @@ from backend.email_service import send_feedback_email
 
 logger = logging.getLogger(__name__)
 
-# --- Vertex AI Client for Image Generation ---
-vertex_client = genai.Client(
-    vertexai=True,
-    project=settings.google_cloud_project,
-    location=settings.google_cloud_location
-)
 
 # --- Logging: console + rotating file ---
 import pathlib as _pathlib
