@@ -1925,7 +1925,7 @@ async def _run_chat_agent(state: SessionState, user_message: str) -> str:
                 if isinstance(result, dict) and "image_b64" in result:
                     try:
                         logger.info(f"Forwarding image to chat client via WS (tool={fc.name}, session={state.session_id})")
-                        result_to_frontend = copy.deepcopy(result)
+                        result_to_frontend = result.copy()
                         if fc.name == "screenshot_tool":
                             result_to_frontend.setdefault("caption", "Screenshot")
                         await state.websocket.send_json({
