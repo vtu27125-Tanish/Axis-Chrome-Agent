@@ -1049,8 +1049,10 @@ async def client_to_agent_messaging(
                     )
                     state.cached_input_count = _initial_counts.get("input_count", 0)
                     state.cached_image_count = _initial_counts.get("image_count", 0)
-                    state.cached_input_limit = _initial_counts.get("input_limit") or settings.limit_inputs
-                    state.cached_image_limit = _initial_counts.get("image_limit") or settings.limit_images
+                    db_in_lim = _initial_counts.get("input_limit")
+                    state.cached_input_limit = db_in_lim if db_in_lim is not None and db_in_lim > settings.limit_inputs else settings.limit_inputs
+                    db_im_lim = _initial_counts.get("image_limit")
+                    state.cached_image_limit = db_im_lim if db_im_lim is not None and db_im_lim > settings.limit_images else settings.limit_images
                 except Exception:
                     pass  # keep the defaults set in __init__
                 # Upsert user + create session
