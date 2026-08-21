@@ -50,8 +50,8 @@ class Settings(BaseSettings):
     huggingface_api_key: str = ""
 
     # Usage Limits
-    limit_inputs: int = 15
-    limit_images: int = 5
+    limit_inputs: int = 1000
+    limit_images: int = 1000
 
 
 @lru_cache()
