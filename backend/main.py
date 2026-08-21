@@ -1442,26 +1442,17 @@ async def generate_image_endpoint(payload: ImageGenRequest, request: Request):
 
     try:
         import urllib.request
-        import json
+        import urllib.parse
         import asyncio
         
-        hf_key = settings.huggingface_api_key
-        if not hf_key:
-            raise HTTPException(status_code=500, detail="HuggingFace API key is not configured.")
-
-        # Using runwayml/stable-diffusion-v1-5 which doesn't require manual license agreements
-        model_url = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
-        
-        headers = {
-            "Authorization": f"Bearer {hf_key}",
-            "Content-Type": "application/json"
-        }
-        payload_data = {"inputs": payload.prompt}
+        # We will use Pollinations.ai - a 100% free, no-API-key image generator
+        # that doesn't have cold starts or complex authentication.
+        safe_prompt = urllib.parse.quote(payload.prompt)
+        model_url = f"https://image.pollinations.ai/prompt/{safe_prompt}?nologo=true"
         
         req = urllib.request.Request(
             model_url,
-            data=json.dumps(payload_data).encode("utf-8"),
-            headers=headers
+            headers={"User-Agent": "AxisChromeAgent/1.0"}
         )
         
         def _fetch():
@@ -1475,8 +1466,8 @@ async def generate_image_endpoint(payload: ImageGenRequest, request: Request):
         image_bytes, status_code = await loop.run_in_executor(None, _fetch)
         
         if status_code != 200:
-            logger.error(f"HF Error: {image_bytes}")
-            raise HTTPException(status_code=500, detail=f"HuggingFace API error: {status_code}")
+            logger.error(f"Image Error: {image_bytes}")
+            raise HTTPException(status_code=500, detail=f"Image API error: {status_code}")
             
         image_b64 = base64.b64encode(image_bytes).decode("utf-8")
             
