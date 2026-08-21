@@ -6,11 +6,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv()  # Load .env before any ADK/google imports
 
-# Force Vertex AI Auth
+# Vertex AI Auth (Opt-in via GOOGLE_GENAI_USE_VERTEXAI=1)
 from backend.config import settings
-os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "1")
-os.environ.setdefault("GOOGLE_CLOUD_PROJECT", settings.google_cloud_project)
-os.environ.setdefault("GOOGLE_CLOUD_LOCATION", settings.google_cloud_location)
 # GOOGLE_APPLICATION_CREDENTIALS: set via .env for local development;
 # on Cloud Run, ADC is provided by the attached Service Account automatically.
 
